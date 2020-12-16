@@ -42,22 +42,20 @@
             // 
             this.dtLastInput.Enabled = false;
             this.dtLastInput.Format = System.Windows.Forms.DateTimePickerFormat.Time;
-            this.dtLastInput.Location = new System.Drawing.Point(116, -6);
+            this.dtLastInput.Location = new System.Drawing.Point(118, 19);
             this.dtLastInput.Name = "dtLastInput";
             this.dtLastInput.ShowUpDown = true;
             this.dtLastInput.Size = new System.Drawing.Size(134, 21);
             this.dtLastInput.TabIndex = 0;
-            this.dtLastInput.Visible = false;
             // 
             // labelLastInput
             // 
             this.labelLastInput.AutoSize = true;
-            this.labelLastInput.Location = new System.Drawing.Point(12, 0);
+            this.labelLastInput.Location = new System.Drawing.Point(14, 25);
             this.labelLastInput.Name = "labelLastInput";
-            this.labelLastInput.Size = new System.Drawing.Size(67, 13);
+            this.labelLastInput.Size = new System.Drawing.Size(85, 13);
             this.labelLastInput.TabIndex = 1;
-            this.labelLastInput.Text = "Last Time";
-            this.labelLastInput.Visible = false;
+            this.labelLastInput.Text = "Recent input";
             // 
             // timerNoInput
             // 
@@ -67,16 +65,16 @@
             // labelStart
             // 
             this.labelStart.AutoSize = true;
-            this.labelStart.Location = new System.Drawing.Point(12, 27);
+            this.labelStart.Location = new System.Drawing.Point(14, 52);
             this.labelStart.Name = "labelStart";
-            this.labelStart.Size = new System.Drawing.Size(69, 13);
+            this.labelStart.Size = new System.Drawing.Size(68, 13);
             this.labelStart.TabIndex = 3;
-            this.labelStart.Text = "Start Time";
+            this.labelStart.Text = "Start work";
             // 
             // dtStart
             // 
             this.dtStart.Format = System.Windows.Forms.DateTimePickerFormat.Time;
-            this.dtStart.Location = new System.Drawing.Point(116, 21);
+            this.dtStart.Location = new System.Drawing.Point(118, 46);
             this.dtStart.Name = "dtStart";
             this.dtStart.ShowUpDown = true;
             this.dtStart.Size = new System.Drawing.Size(134, 21);
@@ -85,16 +83,16 @@
             // labelEnd
             // 
             this.labelEnd.AutoSize = true;
-            this.labelEnd.Location = new System.Drawing.Point(12, 54);
+            this.labelEnd.Location = new System.Drawing.Point(14, 79);
             this.labelEnd.Name = "labelEnd";
-            this.labelEnd.Size = new System.Drawing.Size(65, 13);
+            this.labelEnd.Size = new System.Drawing.Size(64, 13);
             this.labelEnd.TabIndex = 5;
-            this.labelEnd.Text = "End Time";
+            this.labelEnd.Text = "End work";
             // 
             // dtEnd
             // 
             this.dtEnd.Format = System.Windows.Forms.DateTimePickerFormat.Time;
-            this.dtEnd.Location = new System.Drawing.Point(116, 48);
+            this.dtEnd.Location = new System.Drawing.Point(118, 73);
             this.dtEnd.Name = "dtEnd";
             this.dtEnd.ShowUpDown = true;
             this.dtEnd.Size = new System.Drawing.Size(134, 21);
@@ -104,7 +102,8 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(273, 89);
+            this.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.ClientSize = new System.Drawing.Size(273, 113);
             this.Controls.Add(this.labelEnd);
             this.Controls.Add(this.dtEnd);
             this.Controls.Add(this.labelStart);

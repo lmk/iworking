@@ -103,29 +103,37 @@ namespace iworking
 
             Debug.WriteLine("{0} SimulInput {1}, {2}", DateTime.Now.ToString("HHmmss"), x, y);
 
-            // control key 
-            KeyboardSimulation.MakeKeyEvent(0x11, KeyboardEventType.KEYDOWN);
-            KeyboardSimulation.MakeKeyEvent(0x11, KeyboardEventType.KEYUP);
+            bool isRemote = WinAPI.GetSystemMetrics(SystemMetric.SM_REMOTESESSION) != 0;
+            Debug.WriteLine("{0} isRemote: {1}", DateTime.Now.ToString("HHmmss"), isRemote);
 
-            //// draw star
-            //int[,] pts = new int[5,2] { { 843, 215 }, { 1197, 468 }, { 1121, 713 }, { 761, 725 }, { 669, 448 } };
+            if (isRemote)
+            {
+                // control key 
+                KeyboardSimulation.MakeKeyEvent(0x11, KeyboardEventType.KEYDOWN);
+                KeyboardSimulation.MakeKeyEvent(0x11, KeyboardEventType.KEYUP);
+            }
+            else
+            {
+                // draw star
+                int[,] pts = new int[5, 2] { { 843, 215 }, { 1197, 468 }, { 1121, 713 }, { 761, 725 }, { 669, 448 } };
 
-            //MoveMouse(new Point(pts[0, 0], pts[0, 1]), new Point(pts[2, 0], pts[2, 1]));
-            //MoveMouse(new Point(pts[2, 0], pts[2, 1]), new Point(pts[4, 0], pts[4, 1]));
-            //MoveMouse(new Point(pts[4, 0], pts[4, 1]), new Point(pts[1, 0], pts[1, 1]));
-            //MoveMouse(new Point(pts[1, 0], pts[1, 1]), new Point(pts[3, 0], pts[3, 1]));
-            //MoveMouse(new Point(pts[3, 0], pts[3, 1]), new Point(pts[0, 0], pts[0, 1]));
+                MoveMouse(new Point(pts[0, 0], pts[0, 1]), new Point(pts[2, 0], pts[2, 1]));
+                MoveMouse(new Point(pts[2, 0], pts[2, 1]), new Point(pts[4, 0], pts[4, 1]));
+                MoveMouse(new Point(pts[4, 0], pts[4, 1]), new Point(pts[1, 0], pts[1, 1]));
+                MoveMouse(new Point(pts[1, 0], pts[1, 1]), new Point(pts[3, 0], pts[3, 1]));
+                MoveMouse(new Point(pts[3, 0], pts[3, 1]), new Point(pts[0, 0], pts[0, 1]));
+            }
 
-            //MouseSimulation.MouseUp(MouseEventType.NONE, x, y);
 
         }
 
         private void MoveMouse(Point from, Point to)
         {
-            int mc = 40; // 움직일 회수
+            int mc = 30; // 움직일 회수
             int ms = 100; // 움직일 시간
 
-            MouseSimulation.MouseUp(MouseEventType.NONE, from.X, from.Y);
+            //MouseSimulation.MouseUp(MouseEventType.NONE, from.X, from.Y);
+            Cursor.Position = from;
 
             Thread.Sleep(ms / mc);
 
@@ -139,14 +147,16 @@ namespace iworking
                 if (from.Y > to.Y) y = from.Y - ((from.Y - to.Y) / mc * i);
                 else y = from.Y + ((to.Y - from.Y) / mc * i);
 
-                MouseSimulation.MouseUp(MouseEventType.NONE, x, y);
+                //MouseSimulation.MouseUp(MouseEventType.NONE, x, y);
+                Cursor.Position = new Point(x, y);
                 Debug.WriteLine("{0} SimulInput {1}, {2}", DateTime.Now.ToString("HHmmss"), x, y);
 
                 Thread.Sleep(ms / mc);
 
             }
 
-            MouseSimulation.MouseUp(MouseEventType.NONE, to.X, to.Y);
+            //MouseSimulation.MouseUp(MouseEventType.NONE, to.X, to.Y);
+            Cursor.Position = to;
         }
     }
 }

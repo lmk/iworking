@@ -74,6 +74,8 @@ namespace Hook
         public static extern void mouse_event(uint dwFlags, uint dx, uint dy, int dwData, int dwExtraInfo);
         [DllImport("user32.dll")]
         public static extern int SetCursorPos(int x, int y);
+        [DllImport("user32.dll")]
+        public static extern int GetSystemMetrics(SystemMetric smIndex);
         #endregion
     }
 }
