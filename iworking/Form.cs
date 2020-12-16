@@ -2,9 +2,11 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -14,8 +16,6 @@ namespace iworking
 {
     public partial class FormMain : Form
     {
-        private Point mousePosition;
-
         public FormMain()
         {
             InitializeComponent();
@@ -37,8 +37,6 @@ namespace iworking
             }
 
             timerNoInput.Start();
-
-            mousePosition = Cursor.Position;
         }
 
         private void DoInput()
@@ -48,9 +46,13 @@ namespace iworking
 
         private bool InputMouse(MouseEventType type, int x, int y)
         {
-            mousePosition.X = x;
-            mousePosition.Y = y;
             DoInput();
+
+            if (type == MouseEventType.RIGHT)
+            {
+                Debug.WriteLine("Mouse Event {0}, {1}", Cursor.Position.X, Cursor.Position.Y);
+            }
+
             return true;
         }
 
@@ -85,15 +87,66 @@ namespace iworking
 
                 if ((start <= now) && (now <= end))
                 {
-                    SimulMouse();
+                    SimulInput();
                 }
             }
         }
 
-        private void SimulMouse()
+        private void SimulInput()
         {
-            MouseSimulation.MouseUp(MouseEventType.NONE, mousePosition.X - 10, mousePosition.Y - 10);
-            MouseSimulation.MouseUp(MouseEventType.NONE, mousePosition.X, mousePosition.Y);
+            int x = Cursor.Position.X;
+            int y = Cursor.Position.Y;
+
+            //MouseSimulation.MouseUp(MouseEventType.NONE, 10, 10);
+            //Thread.Sleep(100);
+            //MouseSimulation.MouseUp(MouseEventType.NONE, x, y);
+
+            Debug.WriteLine("{0} SimulInput {1}, {2}", DateTime.Now.ToString("HHmmss"), x, y);
+
+            // control key 
+            KeyboardSimulation.MakeKeyEvent(0x11, KeyboardEventType.KEYDOWN);
+            KeyboardSimulation.MakeKeyEvent(0x11, KeyboardEventType.KEYUP);
+
+            //// draw star
+            //int[,] pts = new int[5,2] { { 843, 215 }, { 1197, 468 }, { 1121, 713 }, { 761, 725 }, { 669, 448 } };
+
+            //MoveMouse(new Point(pts[0, 0], pts[0, 1]), new Point(pts[2, 0], pts[2, 1]));
+            //MoveMouse(new Point(pts[2, 0], pts[2, 1]), new Point(pts[4, 0], pts[4, 1]));
+            //MoveMouse(new Point(pts[4, 0], pts[4, 1]), new Point(pts[1, 0], pts[1, 1]));
+            //MoveMouse(new Point(pts[1, 0], pts[1, 1]), new Point(pts[3, 0], pts[3, 1]));
+            //MoveMouse(new Point(pts[3, 0], pts[3, 1]), new Point(pts[0, 0], pts[0, 1]));
+
+            //MouseSimulation.MouseUp(MouseEventType.NONE, x, y);
+
+        }
+
+        private void MoveMouse(Point from, Point to)
+        {
+            int mc = 40; // 움직일 회수
+            int ms = 100; // 움직일 시간
+
+            MouseSimulation.MouseUp(MouseEventType.NONE, from.X, from.Y);
+
+            Thread.Sleep(ms / mc);
+
+            for (int i=0; i<mc; i++)
+            {
+                int x, y;
+
+                if (from.X > to.X) x = from.X - ((from.X - to.X) / mc * i);
+                else x = from.X + ((to.X - from.X) / mc * i);
+
+                if (from.Y > to.Y) y = from.Y - ((from.Y - to.Y) / mc * i);
+                else y = from.Y + ((to.Y - from.Y) / mc * i);
+
+                MouseSimulation.MouseUp(MouseEventType.NONE, x, y);
+                Debug.WriteLine("{0} SimulInput {1}, {2}", DateTime.Now.ToString("HHmmss"), x, y);
+
+                Thread.Sleep(ms / mc);
+
+            }
+
+            MouseSimulation.MouseUp(MouseEventType.NONE, to.X, to.Y);
         }
     }
 }

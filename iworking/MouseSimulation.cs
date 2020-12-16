@@ -1,4 +1,5 @@
-﻿using static Hook.WinAPI;
+﻿using System.Diagnostics;
+using static Hook.WinAPI;
 
 namespace Hook
 {
@@ -23,7 +24,7 @@ namespace Hook
 
         public static void MouseUp(MouseEventType type, int x, int y)
         {
-            SetCursorPos(x, y);
+            int ret = SetCursorPos(x, y);
             switch (type)
             {
                 case MouseEventType.LEFT:
