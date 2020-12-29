@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Runtime.InteropServices;
+using System.Text;
 
 namespace Hook
 {
@@ -76,6 +77,19 @@ namespace Hook
         public static extern int SetCursorPos(int x, int y);
         [DllImport("user32.dll")]
         public static extern int GetSystemMetrics(SystemMetric smIndex);
+
+        [DllImport("user32.dll")]
+        public static extern IntPtr FindWindow(string lpClassName, string lpWindowName);
+        [DllImport("user32.dll")]
+        public static extern bool SetForegroundWindow(IntPtr hWnd);
+        [DllImport("user32.dll")]
+        public static extern bool ShowWindowAsync(IntPtr hWnd, int nCmdShow);
+        [DllImport("user32")]
+        public static extern int GetDesktopWindow();
+        [DllImport("user32")]
+        public static extern int GetForegroundWindow();
+        [DllImport("user32.dll")]
+        public static extern int GetWindowText(int hWnd, StringBuilder text, int count);
         #endregion
     }
 }

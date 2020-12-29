@@ -559,4 +559,11 @@
         /// </summary>
         SM_YVIRTUALSCREEN = 77,
     }
+
+    public enum ShowWindow: int
+    {
+        SW_SHOWNORMAL = 1,
+        SW_SHOWMINIMIZED = 2,
+        SW_SHOWMAXIMIZED = 3
+    }
 }

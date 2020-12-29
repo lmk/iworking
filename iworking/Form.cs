@@ -1,13 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Diagnostics;
 using System.Drawing;
-using System.Linq;
-using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 using Hook;
@@ -104,9 +98,14 @@ namespace iworking
             Debug.WriteLine("{0} SimulInput {1}, {2}", DateTime.Now.ToString("HHmmss"), x, y);
 
             bool isRemote = WinAPI.GetSystemMetrics(SystemMetric.SM_REMOTESESSION) != 0;
-            Debug.WriteLine("{0} isRemote: {1}", DateTime.Now.ToString("HHmmss"), isRemote);
+            //Debug.WriteLine("{0} isRemote: {1}", DateTime.Now.ToString("HHmmss"), isRemote);
 
-            if (isRemote)
+            if (WindowControl.GetTopWindowProcess() == null)
+            {
+                // TimeKeeper 근무시작 버튼 위치
+                MouseSimulation.MouseClick(MouseEventType.LEFT, 80, 45);
+            }
+            else if (isRemote)
             {
                 // control key 
                 KeyboardSimulation.MakeKeyEvent(0x11, KeyboardEventType.KEYDOWN);

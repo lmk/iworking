@@ -1,5 +1,4 @@
-﻿using System.Diagnostics;
-using static Hook.WinAPI;
+﻿using static Hook.WinAPI;
 
 namespace Hook
 {
