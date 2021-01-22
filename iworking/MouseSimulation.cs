@@ -1,4 +1,5 @@
-﻿using static Hook.WinAPI;
+﻿using System.Threading;
+using static Hook.WinAPI;
 
 namespace Hook
 {
@@ -7,7 +8,7 @@ namespace Hook
         public static void MouseDown(MouseEventType type, int x, int y)
         {
             SetCursorPos(x, y);
-            switch(type)
+            switch (type)
             {
                 case MouseEventType.LEFT:
                     Mouse(LBDOWN);
@@ -50,6 +51,8 @@ namespace Hook
         }
 
         private static void Mouse(uint button)
-            => mouse_event(button, 0, 0, 0, 0);
+        {
+            mouse_event(button, 0, 0, 0, 0);
+        }
     }
 }

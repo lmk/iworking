@@ -21,7 +21,7 @@ namespace iworking
             KeyboardHook.KeyUp += InputKeyboard;
             MouseHook.MouseDown += InputMouse;
             MouseHook.MouseUp += InputMouse;
-            MouseHook.MouseMove += InputMouse;
+            MouseHook.MouseMove += MoveMouse;
             MouseHook.MouseScroll += InputMouseScroll;
 
             KeyboardHook.HookStart();
@@ -38,27 +38,30 @@ namespace iworking
             dtLastInput.Value = DateTime.Now;
         }
 
+        private bool MoveMouse(MouseEventType type, int x, int y)
+        {
+            DoInput();
+            return true;
+        }
+
         private bool InputMouse(MouseEventType type, int x, int y)
         {
             DoInput();
-
-            if (type == MouseEventType.RIGHT)
-            {
-                Debug.WriteLine("Mouse Event {0}, {1}", Cursor.Position.X, Cursor.Position.Y);
-            }
-
+            drawStar.Stop();
             return true;
         }
 
         private bool InputKeyboard(int vkCode)
         {
             DoInput();
+            drawStar.Stop();
             return true;
         }
 
         private bool InputMouseScroll(MouseScrollType type)
         {
             DoInput();
+            drawStar.Stop();
             return true;
         }
 
@@ -73,7 +76,7 @@ namespace iworking
             TimeSpan ts = DateTime.Now.Subtract(dtLastInput.Value);
 
             // 60초 동안 입력이 없으면 동작
-            if (ts.TotalSeconds >= 60)
+            if (ts.TotalSeconds >= 6)
             {
                 int start = Int32.Parse(dtStart.Value.ToString("HHmmss"));
                 int end = Int32.Parse(dtEnd.Value.ToString("HHmmss"));
@@ -85,6 +88,8 @@ namespace iworking
                 }
             }
         }
+        
+        DrawStar drawStar = new DrawStar();
 
         private void SimulInput()
         {
@@ -95,7 +100,7 @@ namespace iworking
             //Thread.Sleep(100);
             //MouseSimulation.MouseUp(MouseEventType.NONE, x, y);
 
-            Debug.WriteLine("{0} SimulInput {1}, {2}", DateTime.Now.ToString("HHmmss"), x, y);
+            //Debug.WriteLine("{0} SimulInput {1}, {2}", DateTime.Now.ToString("HHmmss"), x, y);
 
             bool isRemote = WinAPI.GetSystemMetrics(SystemMetric.SM_REMOTESESSION) != 0;
             //Debug.WriteLine("{0} isRemote: {1}", DateTime.Now.ToString("HHmmss"), isRemote);
@@ -113,20 +118,58 @@ namespace iworking
             }
             else
             {
-                // draw star
-                int[,] pts = new int[5, 2] { { 843, 215 }, { 1197, 468 }, { 1121, 713 }, { 761, 725 }, { 669, 448 } };
+                drawStar.Draw();
+            }
+        }
+    }
+
+    internal class DrawStar
+    {
+        EventWaitHandle drawing = new EventWaitHandle(false, EventResetMode.ManualReset);
+
+        Thread DrawStarThread = null;
+
+        public void Draw()
+        {
+            if (DrawStarThread == null || !DrawStarThread.IsAlive)
+            {
+                DrawStarThread = new Thread(DrawFunc);
+            }
+
+            if (!drawing.WaitOne(0))
+            {
+                DrawStarThread.Start(drawing);
+            }
+        }
+
+        public void Stop()
+        {
+            DrawStarThread?.Abort();
+            DrawStarThread = null;
+            drawing.Reset();
+        }
+
+        private static void DrawFunc(object obj)
+        {
+
+            // 별의 꼭지점 좌표
+            int[,] pts = new int[5, 2] { { 843, 215 }, { 1197, 468 }, { 1121, 713 }, { 761, 725 }, { 669, 448 } };
+
+            var e = (EventWaitHandle)obj;
+            {
+                e.Set();
 
                 MoveMouse(new Point(pts[0, 0], pts[0, 1]), new Point(pts[2, 0], pts[2, 1]));
                 MoveMouse(new Point(pts[2, 0], pts[2, 1]), new Point(pts[4, 0], pts[4, 1]));
                 MoveMouse(new Point(pts[4, 0], pts[4, 1]), new Point(pts[1, 0], pts[1, 1]));
                 MoveMouse(new Point(pts[1, 0], pts[1, 1]), new Point(pts[3, 0], pts[3, 1]));
                 MoveMouse(new Point(pts[3, 0], pts[3, 1]), new Point(pts[0, 0], pts[0, 1]));
+
+                e.Reset();
             }
-
-
         }
 
-        private void MoveMouse(Point from, Point to)
+        private static void MoveMouse(Point from, Point to)
         {
             int mc = 30; // 움직일 회수
             int ms = 100; // 움직일 시간
@@ -136,7 +179,7 @@ namespace iworking
 
             Thread.Sleep(ms / mc);
 
-            for (int i=0; i<mc; i++)
+            for (int i = 0; i < mc; i++)
             {
                 int x, y;
 
@@ -148,10 +191,9 @@ namespace iworking
 
                 //MouseSimulation.MouseUp(MouseEventType.NONE, x, y);
                 Cursor.Position = new Point(x, y);
-                Debug.WriteLine("{0} SimulInput {1}, {2}", DateTime.Now.ToString("HHmmss"), x, y);
+                //Debug.WriteLine("{0} SimulInput {1}, {2}", DateTime.Now.ToString("HHmmss"), x, y);
 
                 Thread.Sleep(ms / mc);
-
             }
 
             //MouseSimulation.MouseUp(MouseEventType.NONE, to.X, to.Y);

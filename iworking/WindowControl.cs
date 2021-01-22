@@ -1,6 +1,5 @@
 ﻿using System.Diagnostics;
 using System.Text;
-using static Hook.WinAPI;
 
 namespace Hook
 {
